@@ -93,10 +93,11 @@ const MessageInput = memo(({
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   return (
-    <Box flex={1} display="flex" flexDirection="column" gap="2">
+    <Box flex={1} minW="0" display="flex" flexDirection="column" gap="2">
       {attachedImages.length > 0 && (
         <Box
           width="100%"
+          minW="0"
           bg="gray.700"
           borderRadius="12px"
           px="3"
@@ -193,7 +194,7 @@ function Footer({ isCollapsed = false, onToggle }: FooterProps): JSX.Element {
 
       <Box pt="0" px="4">
         <HStack width="100%" gap={4} align="flex-start">
-          <Box>
+          <Box flexShrink={0}>
             <Box mb="1.5">
               <AIStateIndicator />
             </Box>
