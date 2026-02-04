@@ -11,7 +11,6 @@ import { InputGroup } from '@/components/ui/input-group';
 import { footerStyles } from './footer-styles';
 import AIStateIndicator from './ai-state-indicator';
 import { useFooter } from '@/hooks/footer/use-footer';
-import { ImagePayload } from '@/types/media';
 
 // Type definitions
 interface FooterProps {
@@ -38,7 +37,6 @@ interface MessageInputProps {
   onCompositionEnd: () => void
   onAttachFiles: (files: FileList | null) => void
   attachedCount: number
-  attachedImages: ImagePayload[]
 }
 
 // Reusable components
@@ -87,42 +85,12 @@ const MessageInput = memo(({
   onCompositionEnd,
   onAttachFiles,
   attachedCount,
-  attachedImages,
 }: MessageInputProps) => {
   const { t } = useTranslation();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   return (
     <Box flex={1} minW="0" display="flex" flexDirection="column" gap="2">
-      {attachedImages.length > 0 && (
-        <Box
-          width="100%"
-          minW="0"
-          bg="gray.700"
-          borderRadius="12px"
-          px="3"
-          py="2"
-        >
-          <HStack spacing="2" flexWrap="wrap">
-            {attachedImages.map((image, index) => (
-              <Box
-                key={`${image.data}-${index}`}
-                borderRadius="md"
-                overflow="hidden"
-                border="1px solid"
-                borderColor="whiteAlpha.300"
-              >
-                <Image
-                  src={image.data}
-                  alt={t('footer.attachFile')}
-                  boxSize="64px"
-                  objectFit="cover"
-                />
-              </Box>
-            ))}
-          </HStack>
-        </Box>
-      )}
       <InputGroup>
         <Box position="relative" width="100%">
           <IconButton
@@ -175,6 +143,7 @@ MessageInput.displayName = 'MessageInput';
 
 // Main component
 function Footer({ isCollapsed = false, onToggle }: FooterProps): JSX.Element {
+  const { t } = useTranslation();
   const {
     inputValue,
     handleInputChange,
@@ -189,10 +158,40 @@ function Footer({ isCollapsed = false, onToggle }: FooterProps): JSX.Element {
   } = useFooter();
 
   return (
-    <Box {...footerStyles.footer.container(isCollapsed)}>
+    <Box {...footerStyles.footer.container(isCollapsed, attachedImages.length > 0)}>
       <ToggleButton isCollapsed={isCollapsed} onToggle={onToggle} />
 
       <Box pt="0" px="4">
+        {attachedImages.length > 0 && (
+          <Box
+            width="100%"
+            minW="0"
+            bg="gray.700"
+            borderRadius="12px"
+            px="3"
+            py="2"
+            mb="3"
+          >
+            <HStack spacing="2" flexWrap="wrap">
+              {attachedImages.map((image, index) => (
+                <Box
+                  key={`${image.data}-${index}`}
+                  borderRadius="md"
+                  overflow="hidden"
+                  border="1px solid"
+                  borderColor="whiteAlpha.300"
+                >
+                  <Image
+                    src={image.data}
+                    alt={t('footer.attachFile')}
+                    boxSize="64px"
+                    objectFit="cover"
+                  />
+                </Box>
+              ))}
+            </HStack>
+          </Box>
+        )}
         <HStack width="100%" gap={4} align="flex-start">
           <Box flexShrink={0}>
             <Box mb="1.5">
@@ -213,7 +212,6 @@ function Footer({ isCollapsed = false, onToggle }: FooterProps): JSX.Element {
             onCompositionEnd={handleCompositionEnd}
             onAttachFiles={handleAttachFiles}
             attachedCount={attachedImages.length}
-            attachedImages={attachedImages}
           />
         </HStack>
       </Box>

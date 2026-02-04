@@ -23,6 +23,14 @@ export class WindowManager {
   // Track if mouse events are forcibly ignored
   private forceIgnoreMouse = false;
 
+  private getDefaultWindowSize(): { width: number; height: number } {
+    const { width, height } = screen.getPrimaryDisplay().workArea;
+    return {
+      width: Math.round(width * 0.5),
+      height: Math.round(height * 0.6),
+    };
+  }
+
   constructor() {
     ipcMain.on('renderer-ready-for-mode-change', (_event, newMode) => {
       if (newMode === 'pet') {
@@ -54,9 +62,10 @@ export class WindowManager {
   }
 
   createWindow(options: Electron.BrowserWindowConstructorOptions): BrowserWindow {
+    const { width, height } = this.getDefaultWindowSize();
     this.window = new BrowserWindow({
-      width: 900,
-      height: 670,
+      width,
+      height,
       show: false,
       transparent: true,
       backgroundColor: '#ffffff',
@@ -168,7 +177,8 @@ export class WindowManager {
     if (this.windowedBounds) {
       this.window.setBounds(this.windowedBounds);
     } else {
-      this.window.setSize(900, 670);
+      const { width, height } = this.getDefaultWindowSize();
+      this.window.setSize(width, height);
       this.window.center();
     }
 
