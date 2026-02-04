@@ -6,13 +6,14 @@ import { useInterrupt } from '@/components/canvas/live2d';
 import { useChatHistory } from '@/context/chat-history-context';
 import { useVAD } from '@/context/vad-context';
 import { toaster } from '@/components/ui/toaster';
-import { useMediaCapture, ImageData } from '@/hooks/utils/use-media-capture';
+import { useMediaCapture } from '@/hooks/utils/use-media-capture';
+import { ImagePayload } from '@/types/media';
 
 export function useTextInput() {
   const { t } = useTranslation();
   const [inputText, setInputText] = useState('');
   const [isComposing, setIsComposing] = useState(false);
-  const [attachedImages, setAttachedImages] = useState<ImageData[]>([]);
+  const [attachedImages, setAttachedImages] = useState<ImagePayload[]>([]);
   const wsContext = useWebSocket();
   const { aiState } = useAiState();
   const { interrupt } = useInterrupt();
@@ -34,7 +35,7 @@ export function useTextInput() {
   const handleAttachFiles = useCallback(async (files: FileList | null) => {
     if (!files || files.length === 0) return;
 
-    const newImages: ImageData[] = [];
+    const newImages: ImagePayload[] = [];
     for (const file of Array.from(files)) {
       if (!file.type.startsWith('image/')) {
         toaster.create({
@@ -75,13 +76,15 @@ export function useTextInput() {
     }
 
     const images = [...(await captureAllMedia()), ...attachedImages];
+    const trimmedText = inputText.trim();
+    const messageText = trimmedText || (images.length > 0 ? t('sidebar.imageMessage') : '');
 
-    if (inputText.trim()) {
-      appendHumanMessage(inputText.trim());
+    if (messageText) {
+      appendHumanMessage(messageText, images);
     }
     wsContext.sendMessage({
       type: 'text-input',
-      text: inputText.trim(),
+      text: trimmedText,
       images,
     });
 

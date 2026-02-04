@@ -1,6 +1,6 @@
 /* eslint-disable react/require-default-props */
 import {
-  Box, Textarea, IconButton, HStack,
+  Box, Textarea, IconButton, HStack, Image,
 } from '@chakra-ui/react';
 import { BsMicFill, BsMicMuteFill, BsPaperclip } from 'react-icons/bs';
 import { IoHandRightSharp } from 'react-icons/io5';
@@ -11,6 +11,7 @@ import { InputGroup } from '@/components/ui/input-group';
 import { footerStyles } from './footer-styles';
 import AIStateIndicator from './ai-state-indicator';
 import { useFooter } from '@/hooks/footer/use-footer';
+import { ImagePayload } from '@/types/media';
 
 // Type definitions
 interface FooterProps {
@@ -37,6 +38,7 @@ interface MessageInputProps {
   onCompositionEnd: () => void
   onAttachFiles: (files: FileList | null) => void
   attachedCount: number
+  attachedImages: ImagePayload[]
 }
 
 // Reusable components
@@ -85,55 +87,78 @@ const MessageInput = memo(({
   onCompositionEnd,
   onAttachFiles,
   attachedCount,
+  attachedImages,
 }: MessageInputProps) => {
   const { t } = useTranslation();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   return (
-    <InputGroup flex={1}>
-      <Box position="relative" width="100%">
-        <IconButton
-          aria-label="Attach file"
-          variant="ghost"
-          {...footerStyles.footer.attachButton}
-          onClick={() => fileInputRef.current?.click()}
-        >
-          <BsPaperclip size="24" />
-        </IconButton>
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept="image/*"
-          multiple
-          style={{ display: 'none' }}
-          onChange={(event) => {
-            onAttachFiles(event.target.files);
-            event.target.value = '';
-          }}
-          aria-label={t('footer.attachFile')}
-        />
-        <Textarea
-          value={value}
-          onChange={onChange}
-          onKeyDown={onKeyDown}
-          onCompositionStart={onCompositionStart}
-          onCompositionEnd={onCompositionEnd}
-          placeholder={t('footer.typeYourMessage')}
-          {...footerStyles.footer.input}
-        />
-        {attachedCount > 0 && (
-          <Box
-            position="absolute"
-            top="2"
-            right="2"
-            fontSize="xs"
-            color="whiteAlpha.700"
+    <Box flex={1} display="flex" flexDirection="column" gap="2">
+      {attachedImages.length > 0 && (
+        <HStack spacing="2" flexWrap="wrap">
+          {attachedImages.map((image, index) => (
+            <Box
+              key={`${image.data}-${index}`}
+              borderRadius="md"
+              overflow="hidden"
+              border="1px solid"
+              borderColor="whiteAlpha.300"
+            >
+              <Image
+                src={image.data}
+                alt={t('footer.attachFile')}
+                boxSize="64px"
+                objectFit="cover"
+              />
+            </Box>
+          ))}
+        </HStack>
+      )}
+      <InputGroup>
+        <Box position="relative" width="100%">
+          <IconButton
+            aria-label="Attach file"
+            variant="ghost"
+            {...footerStyles.footer.attachButton}
+            onClick={() => fileInputRef.current?.click()}
           >
-            {t('footer.attachmentsCount', { count: attachedCount })}
-          </Box>
-        )}
-      </Box>
-    </InputGroup>
+            <BsPaperclip size="24" />
+          </IconButton>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            multiple
+            style={{ display: 'none' }}
+            onChange={(event) => {
+              onAttachFiles(event.target.files);
+              event.target.value = '';
+            }}
+            aria-label={t('footer.attachFile')}
+          />
+          <Textarea
+            value={value}
+            onChange={onChange}
+            onKeyDown={onKeyDown}
+            onCompositionStart={onCompositionStart}
+            onCompositionEnd={onCompositionEnd}
+            placeholder={t('footer.typeYourMessage')}
+            {...footerStyles.footer.input}
+          />
+          {attachedCount > 0 && (
+            <Box
+              position="absolute"
+              top="2"
+              right="2"
+              fontSize="xs"
+              color="whiteAlpha.700"
+            >
+              {t('footer.attachmentsCount', { count: attachedCount })}
+            </Box>
+          )}
+        </Box>
+      </InputGroup>
+    </Box>
   );
 });
 
@@ -159,7 +184,7 @@ function Footer({ isCollapsed = false, onToggle }: FooterProps): JSX.Element {
       <ToggleButton isCollapsed={isCollapsed} onToggle={onToggle} />
 
       <Box pt="0" px="4">
-        <HStack width="100%" gap={4}>
+        <HStack width="100%" gap={4} align="flex-start">
           <Box>
             <Box mb="1.5">
               <AIStateIndicator />
@@ -179,6 +204,7 @@ function Footer({ isCollapsed = false, onToggle }: FooterProps): JSX.Element {
             onCompositionEnd={handleCompositionEnd}
             onAttachFiles={handleAttachFiles}
             attachedCount={attachedImages.length}
+            attachedImages={attachedImages}
           />
         </HStack>
       </Box>

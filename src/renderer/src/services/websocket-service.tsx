@@ -6,6 +6,7 @@ import { ModelInfo } from '@/context/live2d-config-context';
 import { HistoryInfo } from '@/context/websocket-context';
 import { ConfigFile } from '@/context/character-config-context';
 import { toaster } from '@/components/ui/toaster';
+import { ImagePayload } from '@/types/media';
 
 export interface DisplayText {
   text: string;
@@ -34,6 +35,7 @@ export interface Message {
   timestamp: string;
   name?: string;
   avatar?: string;
+  images?: ImagePayload[];
 
   // Fields for different message types (make optional)
   type?: 'text' | 'tool_call_status'; // Add possible types, default to 'text' if omitted

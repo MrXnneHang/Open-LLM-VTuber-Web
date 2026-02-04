@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { useCamera } from '@/context/camera-context';
 import { useScreenCaptureContext } from '@/context/screen-capture-context';
 import { toaster } from "@/components/ui/toaster";
+import { ImagePayload } from '@/types/media';
 import {
   IMAGE_COMPRESSION_QUALITY_KEY,
   DEFAULT_IMAGE_COMPRESSION_QUALITY,
@@ -17,12 +18,6 @@ declare class ImageCapture {
   constructor(track: MediaStreamTrack);
 
   grabFrame(): Promise<ImageBitmap>;
-}
-
-export interface ImageData {
-  source: 'camera' | 'screen' | 'upload';
-  data: string;
-  mime_type: string;
 }
 
 export function useMediaCapture() {
@@ -99,7 +94,7 @@ export function useMediaCapture() {
   }, [t, getCompressionQuality, getImageMaxWidth]);
 
   const captureAllMedia = useCallback(async () => {
-    const images: ImageData[] = [];
+    const images: ImagePayload[] = [];
 
     // Capture camera frame
     if (cameraStream) {
