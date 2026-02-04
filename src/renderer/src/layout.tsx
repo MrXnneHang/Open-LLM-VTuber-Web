@@ -52,7 +52,8 @@ export const layoutStyles = {
   },
   footer: {
     width: '100%',
-    height: { base: '100px', md: '120px' },
+    height: 'auto',
+    minHeight: { base: '100px', md: '120px' },
     transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
     willChange: 'transform',
     position: 'relative',

@@ -6,7 +6,7 @@
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable react/require-default-props */
 import React, { useEffect } from 'react';
-import { Box, Spinner, Flex, Text, Icon } from '@chakra-ui/react';
+import { Box, Spinner, Flex, Text, Icon, Image } from '@chakra-ui/react';
 import { sidebarStyles, chatPanelStyles } from './sidebar-styles';
 import { MainContainer, ChatContainer, MessageList as ChatMessageList, Message as ChatMessage, Avatar as ChatAvatar } from '@chatscope/chat-ui-kit-react';
 import '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css';
@@ -26,6 +26,7 @@ function ChatHistoryPanel(): JSX.Element {
   const userName = "Me";
 
   const validMessages = messages.filter((msg) => msg.content || // Keep messages with content
+     (msg.images && msg.images.length > 0) || // Keep messages with images
      (msg.type === 'tool_call_status' && msg.status === 'running') || // Keep running tools
      (msg.type === 'tool_call_status' && msg.status === 'completed') || // Keep completed tools
      (msg.type === 'tool_call_status' && msg.status === 'error'), // Keep error tools
@@ -96,11 +97,12 @@ function ChatHistoryPanel(): JSX.Element {
                   );
                 } 
                 // Render Standard Chat Message (human or ai text)
+                const hasImages = msg.images && msg.images.length > 0;
                 return (
                   <ChatMessage
                     key={msg.id}
                     model={{
-                      message: msg.content,
+                      message: msg.content || (hasImages ? t('sidebar.imageMessage') : ''),
                       sentTime: msg.timestamp,
                       sender: msg.role === 'ai'
                         ? (msg.name || confName || 'AI')
@@ -133,6 +135,26 @@ function ChatHistoryPanel(): JSX.Element {
                         userName[0].toUpperCase()
                       )}
                     </ChatAvatar>
+                    {hasImages && (
+                      <Box mt="2" display="flex" flexWrap="wrap" gap="2">
+                        {msg.images?.map((image, index) => (
+                          <Box
+                            key={`${msg.id}-image-${index}`}
+                            borderRadius="md"
+                            overflow="hidden"
+                            border="1px solid"
+                            borderColor="whiteAlpha.300"
+                          >
+                            <Image
+                              src={image.data}
+                              alt={t('sidebar.imageMessage')}
+                              boxSize="120px"
+                              objectFit="cover"
+                            />
+                          </Box>
+                        ))}
+                      </Box>
+                    )}
                   </ChatMessage>
                 );
               })
