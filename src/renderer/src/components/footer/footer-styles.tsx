@@ -21,15 +21,12 @@ export const footerStyles: {
     container: (isCollapsed, hasAttachments) => ({
       bg: isCollapsed ? 'transparent' : 'gray.800',
       borderTopRadius: isCollapsed ? 'none' : 'lg',
-      transform: isCollapsed
-        ? 'translateY(calc(100% - 24px))'
-        : hasAttachments
-          ? 'translateY(-5vh)'
-          : 'translateY(0)',
+      transform: isCollapsed ? 'translateY(calc(100% - 24px))' : 'translateY(0)',
       transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
       height: 'auto',
       minHeight: isCollapsed ? 'auto' : { base: '100px', md: '120px' },
       position: 'relative',
+      bottom: !isCollapsed && hasAttachments ? '5vh' : '0',
       overflow: isCollapsed ? 'visible' : 'hidden',
       pb: '4',
     }),
