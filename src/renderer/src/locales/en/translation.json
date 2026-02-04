@@ -71,7 +71,9 @@
     "cameraControl": "Click to start camera",
     "cameraStopping": "Click to stop camera",
     "screenControl": "Click to start screen capture",
-    "screenStopping": "Click to stop screen capture"
+    "screenStopping": "Click to stop screen capture",
+    "attachFile": "Attach file",
+    "attachmentsCount": "{{count}} attachment(s)"
   },
   "sidebar": {
     "camera": "Camera",
@@ -119,7 +121,9 @@
     "enterValidUuid": "Please enter a valid UUID",
     "cannotDeleteCurrentHistory": "Cannot delete current chat history",
     "failedCapture": "Failed to capture {{source}} frame",
+    "failedReadFile": "Failed to read attachment {{filename}}",
     "failedParseWebSocket": "Failed to parse WebSocket message",
+    "unsupportedFileType": "Only image files can be attached.",
     "websocketNotOpen": "WebSocket is not open.",
     "vadMisfire": "Voice detected but too brief. Try speaking louder/longer, or adjust settings (lower speech threshold, lower negative threshold, reduce redemption frames)."
   },
