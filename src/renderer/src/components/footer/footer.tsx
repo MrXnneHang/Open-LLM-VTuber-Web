@@ -186,13 +186,18 @@ function Footer({ isCollapsed = false, onToggle }: FooterProps): JSX.Element {
                   <Image
                     src={image.data}
                     alt={t('footer.attachFile')}
-                    boxSize="64px"
+                    boxSize="128px"
                     objectFit="cover"
                   />
                   <IconButton
                     aria-label={t('footer.removeAttachment')}
                     icon={<BsX />}
-                    size="xs"
+                    size="xs"          // 先用 xs 当基准
+                    w="18px"
+                    h="18px"
+                    minW="18px"        // IconButton 默认有 minW，不设会缩不下去
+                    p="0"
+                    fontSize="12px"    // 控制图标大小（icon 会吃到 fontSize）
                     position="absolute"
                     top="1"
                     right="1"

@@ -26,7 +26,7 @@ export const footerStyles: {
       height: 'auto',
       minHeight: isCollapsed ? 'auto' : { base: '100px', md: '120px' },
       position: 'relative',
-      bottom: !isCollapsed && hasAttachments ? '5vh' : '0',
+      bottom: !isCollapsed && hasAttachments ? '10vh' : '0',
       overflow: isCollapsed ? 'visible' : 'hidden',
       pb: '4',
     }),
