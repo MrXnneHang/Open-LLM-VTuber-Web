@@ -70,7 +70,8 @@
     "screenControl": "点击开始屏幕共享",
     "screenStopping": "点击停止屏幕共享",
     "attachFile": "上传文件",
-    "attachmentsCount": "已添加{{count}}个附件"
+    "attachmentsCount": "已添加{{count}}个附件",
+    "removeAttachment": "移除附件"
   },
   "sidebar": {
     "camera": "摄像头",
