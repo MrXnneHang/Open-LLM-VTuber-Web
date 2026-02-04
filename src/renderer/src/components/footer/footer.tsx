@@ -95,24 +95,32 @@ const MessageInput = memo(({
   return (
     <Box flex={1} display="flex" flexDirection="column" gap="2">
       {attachedImages.length > 0 && (
-        <HStack spacing="2" flexWrap="wrap">
-          {attachedImages.map((image, index) => (
-            <Box
-              key={`${image.data}-${index}`}
-              borderRadius="md"
-              overflow="hidden"
-              border="1px solid"
-              borderColor="whiteAlpha.300"
-            >
-              <Image
-                src={image.data}
-                alt={t('footer.attachFile')}
-                boxSize="64px"
-                objectFit="cover"
-              />
-            </Box>
-          ))}
-        </HStack>
+        <Box
+          width="100%"
+          bg="gray.700"
+          borderRadius="12px"
+          px="3"
+          py="2"
+        >
+          <HStack spacing="2" flexWrap="wrap">
+            {attachedImages.map((image, index) => (
+              <Box
+                key={`${image.data}-${index}`}
+                borderRadius="md"
+                overflow="hidden"
+                border="1px solid"
+                borderColor="whiteAlpha.300"
+              >
+                <Image
+                  src={image.data}
+                  alt={t('footer.attachFile')}
+                  boxSize="64px"
+                  objectFit="cover"
+                />
+              </Box>
+            ))}
+          </HStack>
+        </Box>
       )}
       <InputGroup>
         <Box position="relative" width="100%">
