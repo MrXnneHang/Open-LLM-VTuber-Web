@@ -1,7 +1,7 @@
 import { SystemStyleObject } from '@chakra-ui/react';
 
 interface FooterStyles {
-  container: (isCollapsed: boolean) => SystemStyleObject
+  container: (isCollapsed: boolean, hasAttachments: boolean) => SystemStyleObject
   toggleButton: SystemStyleObject
   actionButton: SystemStyleObject
   input: SystemStyleObject
@@ -18,10 +18,14 @@ export const footerStyles: {
   aiIndicator: AIIndicatorStyles
 } = {
   footer: {
-    container: (isCollapsed) => ({
+    container: (isCollapsed, hasAttachments) => ({
       bg: isCollapsed ? 'transparent' : 'gray.800',
       borderTopRadius: isCollapsed ? 'none' : 'lg',
-      transform: isCollapsed ? 'translateY(calc(100% - 24px))' : 'translateY(0)',
+      transform: isCollapsed
+        ? 'translateY(calc(100% - 24px))'
+        : hasAttachments
+          ? 'translateY(-5vh)'
+          : 'translateY(0)',
       transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
       height: 'auto',
       minHeight: isCollapsed ? 'auto' : { base: '100px', md: '120px' },
