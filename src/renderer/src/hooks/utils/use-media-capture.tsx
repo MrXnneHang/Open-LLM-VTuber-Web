@@ -19,8 +19,8 @@ declare class ImageCapture {
   grabFrame(): Promise<ImageBitmap>;
 }
 
-interface ImageData {
-  source: 'camera' | 'screen';
+export interface ImageData {
+  source: 'camera' | 'screen' | 'upload';
   data: string;
   mime_type: string;
 }

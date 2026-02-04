@@ -5,7 +5,7 @@ import {
 import { BsMicFill, BsMicMuteFill, BsPaperclip } from 'react-icons/bs';
 import { IoHandRightSharp } from 'react-icons/io5';
 import { FiChevronDown } from 'react-icons/fi';
-import { memo } from 'react';
+import { memo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { InputGroup } from '@/components/ui/input-group';
 import { footerStyles } from './footer-styles';
@@ -35,6 +35,8 @@ interface MessageInputProps {
   onKeyDown: (e: React.KeyboardEvent<HTMLTextAreaElement>) => void
   onCompositionStart: () => void
   onCompositionEnd: () => void
+  onAttachFiles: (files: FileList | null) => void
+  attachedCount: number
 }
 
 // Reusable components
@@ -81,8 +83,11 @@ const MessageInput = memo(({
   onKeyDown,
   onCompositionStart,
   onCompositionEnd,
+  onAttachFiles,
+  attachedCount,
 }: MessageInputProps) => {
   const { t } = useTranslation();
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   return (
     <InputGroup flex={1}>
@@ -91,9 +96,22 @@ const MessageInput = memo(({
           aria-label="Attach file"
           variant="ghost"
           {...footerStyles.footer.attachButton}
+          onClick={() => fileInputRef.current?.click()}
         >
           <BsPaperclip size="24" />
         </IconButton>
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          multiple
+          style={{ display: 'none' }}
+          onChange={(event) => {
+            onAttachFiles(event.target.files);
+            event.target.value = '';
+          }}
+          aria-label={t('footer.attachFile')}
+        />
         <Textarea
           value={value}
           onChange={onChange}
@@ -103,6 +121,17 @@ const MessageInput = memo(({
           placeholder={t('footer.typeYourMessage')}
           {...footerStyles.footer.input}
         />
+        {attachedCount > 0 && (
+          <Box
+            position="absolute"
+            top="2"
+            right="2"
+            fontSize="xs"
+            color="whiteAlpha.700"
+          >
+            {t('footer.attachmentsCount', { count: attachedCount })}
+          </Box>
+        )}
       </Box>
     </InputGroup>
   );
@@ -118,6 +147,8 @@ function Footer({ isCollapsed = false, onToggle }: FooterProps): JSX.Element {
     handleKeyPress,
     handleCompositionStart,
     handleCompositionEnd,
+    handleAttachFiles,
+    attachedImages,
     handleInterrupt,
     handleMicToggle,
     micOn,
@@ -146,6 +177,8 @@ function Footer({ isCollapsed = false, onToggle }: FooterProps): JSX.Element {
             onKeyDown={handleKeyPress}
             onCompositionStart={handleCompositionStart}
             onCompositionEnd={handleCompositionEnd}
+            onAttachFiles={handleAttachFiles}
+            attachedCount={attachedImages.length}
           />
         </HStack>
       </Box>

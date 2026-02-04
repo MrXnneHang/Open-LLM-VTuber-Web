@@ -68,7 +68,9 @@
     "cameraControl": "点击启动摄像头",
     "cameraStopping": "点击停止摄像头",
     "screenControl": "点击开始屏幕共享",
-    "screenStopping": "点击停止屏幕共享"
+    "screenStopping": "点击停止屏幕共享",
+    "attachFile": "上传文件",
+    "attachmentsCount": "已添加{{count}}个附件"
   },
   "sidebar": {
     "camera": "摄像头",
@@ -116,7 +118,9 @@
     "enterValidUuid": "请输入有效的UUID",
     "cannotDeleteCurrentHistory": "无法删除当前聊天记录",
     "failedCapture": "捕获{{source}}帧失败",
+    "failedReadFile": "读取附件{{filename}}失败",
     "failedParseWebSocket": "解析WebSocket消息失败",
+    "unsupportedFileType": "仅支持上传图片文件",
     "websocketNotOpen": "WebSocket未连接",
     "vadMisfire": "检测到语音但过于简短，请尝试提高音量或说得更久一些，或调整识别设置（降低语音识别阈值、降低负面语音阈值、减少验证帧数）"
   },
