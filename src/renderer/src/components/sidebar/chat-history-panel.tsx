@@ -148,7 +148,7 @@ function ChatHistoryPanel(): JSX.Element {
                             <Image
                               src={image.data}
                               alt={t('sidebar.imageMessage')}
-                              boxSize="120px"
+                              boxSize="128px"
                               objectFit="cover"
                             />
                           </Box>

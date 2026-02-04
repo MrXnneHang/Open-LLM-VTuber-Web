@@ -105,6 +105,10 @@ export function useTextInput() {
   const handleCompositionStart = () => setIsComposing(true);
   const handleCompositionEnd = () => setIsComposing(false);
 
+  const handleRemoveAttachment = useCallback((indexToRemove: number) => {
+    setAttachedImages((prev) => prev.filter((_, index) => index !== indexToRemove));
+  }, []);
+
   return {
     inputText,
     setInputText: handleInputChange,
@@ -114,5 +118,6 @@ export function useTextInput() {
     handleCompositionStart,
     handleCompositionEnd,
     attachedImages,
+    handleRemoveAttachment,
   };
 }

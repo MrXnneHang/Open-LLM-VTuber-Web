@@ -2,7 +2,7 @@
 import {
   Box, Textarea, IconButton, HStack, Image,
 } from '@chakra-ui/react';
-import { BsMicFill, BsMicMuteFill, BsPaperclip } from 'react-icons/bs';
+import { BsMicFill, BsMicMuteFill, BsPaperclip, BsX } from 'react-icons/bs';
 import { IoHandRightSharp } from 'react-icons/io5';
 import { FiChevronDown } from 'react-icons/fi';
 import { memo, useRef } from 'react';
@@ -152,6 +152,7 @@ function Footer({ isCollapsed = false, onToggle }: FooterProps): JSX.Element {
     handleCompositionEnd,
     handleAttachFiles,
     attachedImages,
+    handleRemoveAttachment,
     handleInterrupt,
     handleMicToggle,
     micOn,
@@ -176,6 +177,7 @@ function Footer({ isCollapsed = false, onToggle }: FooterProps): JSX.Element {
               {attachedImages.map((image, index) => (
                 <Box
                   key={`${image.data}-${index}`}
+                  position="relative"
                   borderRadius="md"
                   overflow="hidden"
                   border="1px solid"
@@ -184,8 +186,26 @@ function Footer({ isCollapsed = false, onToggle }: FooterProps): JSX.Element {
                   <Image
                     src={image.data}
                     alt={t('footer.attachFile')}
-                    boxSize="64px"
+                    boxSize="128px"
                     objectFit="cover"
+                  />
+                  <IconButton
+                    aria-label={t('footer.removeAttachment')}
+                    icon={<BsX />}
+                    size="xs"          // 先用 xs 当基准
+                    w="18px"
+                    h="18px"
+                    minW="18px"        // IconButton 默认有 minW，不设会缩不下去
+                    p="0"
+                    fontSize="12px"    // 控制图标大小（icon 会吃到 fontSize）
+                    position="absolute"
+                    top="1"
+                    right="1"
+                    borderRadius="full"
+                    bg="blackAlpha.700"
+                    color="whiteAlpha.900"
+                    _hover={{ bg: 'blackAlpha.800' }}
+                    onClick={() => handleRemoveAttachment(index)}
                   />
                 </Box>
               ))}
