@@ -98,11 +98,12 @@ function ChatHistoryPanel(): JSX.Element {
                 } 
                 // Render Standard Chat Message (human or ai text)
                 const hasImages = msg.images && msg.images.length > 0;
+                const messageText = msg.content || (hasImages ? t('sidebar.imageMessage') : '');
                 return (
                   <ChatMessage
                     key={msg.id}
                     model={{
-                      message: msg.content || (hasImages ? t('sidebar.imageMessage') : ''),
+                      message: hasImages ? '' : messageText,
                       sentTime: msg.timestamp,
                       sender: msg.role === 'ai'
                         ? (msg.name || confName || 'AI')
@@ -136,24 +137,33 @@ function ChatHistoryPanel(): JSX.Element {
                       )}
                     </ChatAvatar>
                     {hasImages && (
-                      <Box mt="2" display="flex" flexWrap="wrap" gap="2">
-                        {msg.images?.map((image, index) => (
-                          <Box
-                            key={`${msg.id}-image-${index}`}
-                            borderRadius="md"
-                            overflow="hidden"
-                            border="1px solid"
-                            borderColor="whiteAlpha.300"
-                          >
-                            <Image
-                              src={image.data}
-                              alt={t('sidebar.imageMessage')}
-                              boxSize="128px"
-                              objectFit="cover"
-                            />
+                      <ChatMessage.CustomContent>
+                        <Box mt="2" display="flex" flexDirection="column" gap="2">
+                          <Box display="flex" flexWrap="wrap" gap="2">
+                            {msg.images?.map((image, index) => (
+                              <Box
+                                key={`${msg.id}-image-${index}`}
+                                borderRadius="md"
+                                overflow="hidden"
+                                border="1px solid"
+                                borderColor="whiteAlpha.300"
+                              >
+                                <Image
+                                  src={image.data}
+                                  alt={t('sidebar.imageMessage')}
+                                  boxSize="128px"
+                                  objectFit="cover"
+                              />
+                            </Box>
+                          ))}
                           </Box>
-                        ))}
-                      </Box>
+                          {msg.content && (
+                            <Text fontSize="sm" color="whiteAlpha.900" whiteSpace="pre-wrap">
+                              {msg.content}
+                            </Text>
+                          )}
+                        </Box>
+                      </ChatMessage.CustomContent>
                     )}
                   </ChatMessage>
                 );
