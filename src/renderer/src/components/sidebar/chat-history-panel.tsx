@@ -5,7 +5,7 @@
 /* eslint-disable import/order */
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable react/require-default-props */
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, Spinner, Flex, Text, Icon, Image } from '@chakra-ui/react';
 import { sidebarStyles, chatPanelStyles } from './sidebar-styles';
 import { MainContainer, ChatContainer, MessageList as ChatMessageList, Message as ChatMessage, Avatar as ChatAvatar } from '@chatscope/chat-ui-kit-react';
@@ -16,6 +16,12 @@ import { useConfig } from '@/context/character-config-context';
 import { useWebSocket } from '@/context/websocket-context';
 import { FaTools, FaCheck, FaTimes } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
+import {
+  DialogRoot,
+  DialogContent,
+  DialogCloseTrigger,
+  DialogBody,
+} from '@/components/ui/dialog';
 
 // Main component
 function ChatHistoryPanel(): JSX.Element {
@@ -24,6 +30,7 @@ function ChatHistoryPanel(): JSX.Element {
   const { confName } = useConfig();
   const { baseUrl } = useWebSocket();
   const userName = "Me";
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
 
   const validMessages = messages.filter((msg) => msg.content || // Keep messages with content
      (msg.images && msg.images.length > 0) || // Keep messages with images
@@ -147,6 +154,16 @@ function ChatHistoryPanel(): JSX.Element {
                                 overflow="hidden"
                                 border="1px solid"
                                 borderColor="whiteAlpha.300"
+                                cursor="zoom-in"
+                                role="button"
+                                tabIndex={0}
+                                onClick={() => setPreviewImage(image.data)}
+                                onKeyDown={(event) => {
+                                  if (event.key === 'Enter' || event.key === ' ') {
+                                    event.preventDefault();
+                                    setPreviewImage(image.data);
+                                  }
+                                }}
                               >
                                 <Image
                                   src={image.data}
@@ -172,6 +189,29 @@ function ChatHistoryPanel(): JSX.Element {
           </ChatMessageList>
         </ChatContainer>
       </MainContainer>
+      <DialogRoot
+        open={Boolean(previewImage)}
+        onOpenChange={(details) => {
+          if (!details.open) {
+            setPreviewImage(null);
+          }
+        }}
+      >
+        <DialogContent bg="gray.900" maxW="80vw" w="fit-content">
+          <DialogCloseTrigger />
+          <DialogBody p="4">
+            {previewImage && (
+              <Image
+                src={previewImage}
+                alt={t('sidebar.previewImage')}
+                maxH="80vh"
+                maxW="80vw"
+                objectFit="contain"
+              />
+            )}
+          </DialogBody>
+        </DialogContent>
+      </DialogRoot>
     </Box>
   );
 }

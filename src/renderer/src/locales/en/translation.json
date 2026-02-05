@@ -83,6 +83,7 @@
     "browser": "Browser",
     "live": "Live",
     "imageMessage": "Image attachment",
+    "previewImage": "Preview image",
     "noMessages": "No messages yet. Start a conversation!",
     "noBrowserSession": "No active browser session",
     "browserSession": "Browser Session"
