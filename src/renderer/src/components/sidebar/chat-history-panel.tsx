@@ -136,24 +136,26 @@ function ChatHistoryPanel(): JSX.Element {
                       )}
                     </ChatAvatar>
                     {hasImages && (
-                      <Box mt="2" display="flex" flexWrap="wrap" gap="2">
-                        {msg.images?.map((image, index) => (
-                          <Box
-                            key={`${msg.id}-image-${index}`}
-                            borderRadius="md"
-                            overflow="hidden"
-                            border="1px solid"
-                            borderColor="whiteAlpha.300"
-                          >
-                            <Image
-                              src={image.data}
-                              alt={t('sidebar.imageMessage')}
-                              boxSize="128px"
-                              objectFit="cover"
-                            />
-                          </Box>
-                        ))}
-                      </Box>
+                      <ChatMessage.CustomContent>
+                        <Box mt="2" display="flex" flexWrap="wrap" gap="2">
+                          {msg.images?.map((image, index) => (
+                            <Box
+                              key={`${msg.id}-image-${index}`}
+                              borderRadius="md"
+                              overflow="hidden"
+                              border="1px solid"
+                              borderColor="whiteAlpha.300"
+                            >
+                              <Image
+                                src={image.data}
+                                alt={t('sidebar.imageMessage')}
+                                boxSize="128px"
+                                objectFit="cover"
+                              />
+                            </Box>
+                          ))}
+                        </Box>
+                      </ChatMessage.CustomContent>
                     )}
                   </ChatMessage>
                 );
