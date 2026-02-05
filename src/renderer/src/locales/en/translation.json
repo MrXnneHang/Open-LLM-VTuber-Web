@@ -74,7 +74,8 @@
     "screenStopping": "Click to stop screen capture",
     "attachFile": "Attach file",
     "attachmentsCount": "{{count}} attachment(s)",
-    "removeAttachment": "Remove attachment"
+    "removeAttachment": "Remove attachment",
+    "previewAttachment": "Preview attachment"
   },
   "sidebar": {
     "camera": "Camera",

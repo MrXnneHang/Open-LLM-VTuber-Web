@@ -1,13 +1,23 @@
 /* eslint-disable react/require-default-props */
 import {
-  Box, Textarea, IconButton, HStack, Image,
+  Box,
+  Textarea,
+  IconButton,
+  HStack,
+  Image,
 } from '@chakra-ui/react';
 import { BsMicFill, BsMicMuteFill, BsPaperclip, BsX } from 'react-icons/bs';
 import { IoHandRightSharp } from 'react-icons/io5';
 import { FiChevronDown } from 'react-icons/fi';
-import { memo, useRef } from 'react';
+import { memo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { InputGroup } from '@/components/ui/input-group';
+import {
+  DialogRoot,
+  DialogContent,
+  DialogCloseTrigger,
+  DialogBody,
+} from '@/components/ui/dialog';
 import { footerStyles } from './footer-styles';
 import AIStateIndicator from './ai-state-indicator';
 import { useFooter } from '@/hooks/footer/use-footer';
@@ -157,6 +167,7 @@ function Footer({ isCollapsed = false, onToggle }: FooterProps): JSX.Element {
     handleMicToggle,
     micOn,
   } = useFooter();
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
 
   return (
     <Box {...footerStyles.footer.container(isCollapsed, attachedImages.length > 0)}>
@@ -182,6 +193,16 @@ function Footer({ isCollapsed = false, onToggle }: FooterProps): JSX.Element {
                   overflow="hidden"
                   border="1px solid"
                   borderColor="whiteAlpha.300"
+                  cursor="zoom-in"
+                  role="button"
+                  tabIndex={0}
+                  onClick={() => setPreviewImage(image.data)}
+                  onKeyDown={(event) => {
+                    if (event.key === 'Enter' || event.key === ' ') {
+                      event.preventDefault();
+                      setPreviewImage(image.data);
+                    }
+                  }}
                 >
                   <Image
                     src={image.data}
@@ -205,7 +226,10 @@ function Footer({ isCollapsed = false, onToggle }: FooterProps): JSX.Element {
                     bg="blackAlpha.700"
                     color="whiteAlpha.900"
                     _hover={{ bg: 'blackAlpha.800' }}
-                    onClick={() => handleRemoveAttachment(index)}
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      handleRemoveAttachment(index);
+                    }}
                   />
                 </Box>
               ))}
@@ -235,6 +259,29 @@ function Footer({ isCollapsed = false, onToggle }: FooterProps): JSX.Element {
           />
         </HStack>
       </Box>
+      <DialogRoot
+        open={Boolean(previewImage)}
+        onOpenChange={(details) => {
+          if (!details.open) {
+            setPreviewImage(null);
+          }
+        }}
+      >
+        <DialogContent bg="gray.900" maxW="80vw" w="fit-content">
+          <DialogCloseTrigger />
+          <DialogBody p="4">
+            {previewImage && (
+              <Image
+                src={previewImage}
+                alt={t('footer.previewAttachment')}
+                maxH="80vh"
+                maxW="80vw"
+                objectFit="contain"
+              />
+            )}
+          </DialogBody>
+        </DialogContent>
+      </DialogRoot>
     </Box>
   );
 }
