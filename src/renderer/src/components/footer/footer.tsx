@@ -5,11 +5,6 @@ import {
   IconButton,
   HStack,
   Image,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalBody,
-  ModalCloseButton,
 } from '@chakra-ui/react';
 import { BsMicFill, BsMicMuteFill, BsPaperclip, BsX } from 'react-icons/bs';
 import { IoHandRightSharp } from 'react-icons/io5';
@@ -17,6 +12,12 @@ import { FiChevronDown } from 'react-icons/fi';
 import { memo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { InputGroup } from '@/components/ui/input-group';
+import {
+  DialogRoot,
+  DialogContent,
+  DialogCloseTrigger,
+  DialogBody,
+} from '@/components/ui/dialog';
 import { footerStyles } from './footer-styles';
 import AIStateIndicator from './ai-state-indicator';
 import { useFooter } from '@/hooks/footer/use-footer';
@@ -258,16 +259,17 @@ function Footer({ isCollapsed = false, onToggle }: FooterProps): JSX.Element {
           />
         </HStack>
       </Box>
-      <Modal
-        isOpen={Boolean(previewImage)}
-        onClose={() => setPreviewImage(null)}
-        isCentered
-        size="xl"
+      <DialogRoot
+        open={Boolean(previewImage)}
+        onOpenChange={(details) => {
+          if (!details.open) {
+            setPreviewImage(null);
+          }
+        }}
       >
-        <ModalOverlay bg="blackAlpha.800" />
-        <ModalContent bg="gray.900" maxW="80vw" w="fit-content">
-          <ModalCloseButton color="whiteAlpha.800" />
-          <ModalBody p="4">
+        <DialogContent bg="gray.900" maxW="80vw" w="fit-content">
+          <DialogCloseTrigger />
+          <DialogBody p="4">
             {previewImage && (
               <Image
                 src={previewImage}
@@ -277,9 +279,9 @@ function Footer({ isCollapsed = false, onToggle }: FooterProps): JSX.Element {
                 objectFit="contain"
               />
             )}
-          </ModalBody>
-        </ModalContent>
-      </Modal>
+          </DialogBody>
+        </DialogContent>
+      </DialogRoot>
     </Box>
   );
 }
