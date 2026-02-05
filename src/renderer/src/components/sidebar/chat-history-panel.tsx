@@ -139,11 +139,6 @@ function ChatHistoryPanel(): JSX.Element {
                     {hasImages && (
                       <ChatMessage.CustomContent>
                         <Box mt="2" display="flex" flexDirection="column" gap="2">
-                          {msg.content && (
-                            <Text fontSize="sm" color="whiteAlpha.900" whiteSpace="pre-wrap">
-                              {msg.content}
-                            </Text>
-                          )}
                           <Box display="flex" flexWrap="wrap" gap="2">
                             {msg.images?.map((image, index) => (
                               <Box
@@ -158,10 +153,15 @@ function ChatHistoryPanel(): JSX.Element {
                                   alt={t('sidebar.imageMessage')}
                                   boxSize="128px"
                                   objectFit="cover"
-                                />
-                              </Box>
-                            ))}
+                              />
+                            </Box>
+                          ))}
                           </Box>
+                          {msg.content && (
+                            <Text fontSize="sm" color="whiteAlpha.900" whiteSpace="pre-wrap">
+                              {msg.content}
+                            </Text>
+                          )}
                         </Box>
                       </ChatMessage.CustomContent>
                     )}
